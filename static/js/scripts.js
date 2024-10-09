@@ -16,6 +16,7 @@ $(document).ready(function(){
             },
             error: function(resp) {
                 console.log(resp);
+                $error.text(resp.responseJSON.error).removeClass("error--hidden");
             }
         })
     });

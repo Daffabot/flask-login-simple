@@ -2,8 +2,8 @@ from flask import Flask, request, render_template, flash, redirect, jsonify
 from passlib.hash import pbkdf2_sha256
 import uuid, pymongo
 app = Flask(__name__)
-# client = pymongo.MongoClient('localhost', 27017)
-# db = client.IOT_Control
+client = pymongo.MongoClient('localhost', 27017)
+db = client.IOT_Control
 
 # User Class
 class User:
@@ -22,8 +22,12 @@ class User:
 
         # Encrypt the password
         user['password'] = pbkdf2_sha256.encrypt(user['password'])
-        # db.person.insert_one(user)
-        return jsonify(user), 200
+        # Check for existing email address
+        if db.person.find_one({ "email": user['email'] }):
+            return jsonify({ "error": "Email address already in use" }), 400
+        if db.users.insert_one(user):
+            return jsonify(user), 200
+        return jsonify({ "error": "Signup failed" }), 400
 
 # main index
 @app.route('/')
