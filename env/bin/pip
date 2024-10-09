@@ -1,4 +1,4 @@
-#!/workspaces/flask-login-simple/env/bin/python3.12
+#!/workspaces/flask-login-simple/env/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys

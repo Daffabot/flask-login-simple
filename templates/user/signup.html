@@ -7,14 +7,10 @@
         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
             <div class="card">
                 <div class="card-body">
-                    <form action="">
+                    <form name="signup_form" id="signup">
                         <div class="my-2">
-                            <label for=""><b>Enter Your First Name</b></label>
-                            <input type="text" name="fname" id="fname" class="form-control my-1">
-                        </div>
-                        <div class="my-2">
-                            <label for=""><b>Enter Your Last Name</b></label>
-                            <input type="text" name="lname" id="lname" class="form-control my-1">
+                            <label for=""><b>Enter Your Name</b></label>
+                            <input type="text" name="name" id="fname" class="form-control my-1">
                         </div>
                         <div class="my-2">
                             <label for=""><b>Enter Your Username</b></label>
@@ -25,14 +21,11 @@
                             <input type="email" name="email" id="email" class="form-control my-1">
                         </div>
                         <div class="my-2">
-                            <label for=""><b>Enter Your Education</b></label>
-                            <input type="text" name="edu" id="edu" class="form-control my-1">
-                        </div>
-                        <div class="my-2">
                             <label for=""><b>Enter Your Password</b></label>
                             <input type="password" name="password" id="password" class="form-control my-1">
                         </div>
-                        <button class="btn btn-success">Sign Up</button>
+                        <p class="error error--hidden"></p>
+                        <input class="btn btn-success" type="submit">
                         <span class="d-flex align-items-center">Already have an account? <a href="/user/" class="text-center">Login</a></span>
                     </form>
                 </div>

@@ -1,25 +1,29 @@
-from flask import Flask, request, render_template, flash, redirect
-from flask_sqlalchemy import SQLAlchemy
-from flask_bcrypt import Bcrypt
-app=Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI']="sqlite:///ums.sqlite"
-app.config["SECRET_KEY"]=""
-db=SQLAlchemy(app)
-bcrypt=Bcrypt(app)
+from flask import Flask, request, render_template, flash, redirect, jsonify
+from passlib.hash import pbkdf2_sha256
+import uuid, pymongo
+app = Flask(__name__)
+# client = pymongo.MongoClient('localhost', 27017)
+# db = client.IOT_Control
 
 # User Class
-class User(db.Model):
-    id=db.Column(db.Integer, primary_key=True)
-    fname=db.Column(db.String(255), nullable=False)
-    lname=db.Column(db.String(255), nullable=False)
-    username=db.Column(db.String(255), nullable=False)
-    email=db.Column(db.String(255), nullable=False)
-    edu=db.Column(db.String(255), nullable=False)
-    password=db.Column(db.String(255), nullable=False)
-    status=db.Column(db.Integer, default=1, nullable=False)
+class User:
+    def signup(self):
+        print(request.form)
 
-    def __repr__(self):
-        return f'User("[self.id]", "[self.fname]", "[self.lname]", "[self.username]", "[self.email]", "[self.edu]", "[self.status]")'
+        # Create the user object
+        user = {
+            "id": uuid.uuid4().hex,
+            "name": request.form.get('name'),
+            "username": request.form.get('username'),
+            "email": request.form.get('email'),
+            "password": request.form.get('password'),
+            "access": ""
+        }
+
+        # Encrypt the password
+        user['password'] = pbkdf2_sha256.encrypt(user['password'])
+        # db.person.insert_one(user)
+        return jsonify(user), 200
 
 # main index
 @app.route('/')
@@ -39,26 +43,14 @@ def userIndex():
     return render_template('user/index.html',title="User Login")
 
 # user register
-@app.route('/user/signup', methods=['POST', 'GET'])
+@app.route('/user/signup')
 def userSignup():
-    if request.methods=='POST':
-        # Get all input field name
-        fname=request.form.get('fname')
-        lname=request.form.get('lname')
-        username=request.form.get('username')
-        email=request.form.get('email')
-        edu=request.form.get('edu')
-        password=request.form.get('password')
+    return render_template('user/signup.html',title="User Login")
 
-        # Check all field is it filled or not
-        if fname=="" or lname=="" or username=="" or email=="" or edu=="" or password=="":
-            flash('Please fill all field', 'danger')
-            return redirect('/user/signup')
-        else:
-            hash_password=bcrypt.generate_password_hash(password, 10)
-            # Belum selesai
-    else:
-        return render_template('user/signup.html',title="User Sign Up")
+# user register proses
+@app.route('/user/prosignup', methods=['POST', 'GET'])
+def signup():
+    return User().signup()
 
 if __name__=="__main__":
     app.run(debug=True)
